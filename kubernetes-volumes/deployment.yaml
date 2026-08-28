@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homework
+  namespace: homework
+
+spec:
+  replicas: 3
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: homework
+
+  template:
+    metadata:
+      labels:
+        app: homework
+
+    spec:
+      nodeSelector:
+        homework: "true"
+
+      initContainers:
+        - name: init
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo '<html><body><h1>Hello from Kubernetes homework!</h1></body></html>' > /init/index.html
+          volumeMounts:
+            - name: shared-data
+              mountPath: /init
+
+      containers:
+        - name: web
+          image: python:3.12-alpine
+          command:
+            - python
+            - -m
+            - http.server
+            - "8000"
+            - --directory
+            - /homework
+
+          ports:
+            - containerPort: 8000
+
+          volumeMounts:
+            - name: shared-data
+              mountPath: /homework
+
+            - name: config
+              mountPath: /homework/conf
+
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 8000
+            initialDelaySeconds: 1
+            periodSeconds: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - rm -f /homework/index.html
+
+      volumes:
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: homework
+
+        - name: config
+          configMap:
+            name: homework
