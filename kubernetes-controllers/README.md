@@ -161,8 +161,8 @@ kubectl get rs -n homework
 
 ```text
 NAME                  DESIRED   CURRENT   READY
-homework-xxxxxxxxxx   3         3         3
-homework-yyyyyyyyyy   0         0         0
+homework-5f5fcd7df7   3         3         3       13m
+homework-7f689d4658   0         0         0       87m
 ```
 
 ## Проверка размещения Pod на ноде
