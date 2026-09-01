@@ -1,0 +1,19 @@
+Homework application has been installed.
+
+Namespace:
+  {{ .Release.Namespace }}
+
+Release:
+  {{ .Release.Name }}
+
+Service:
+  {{ include "homework.fullname" . }}
+
+{{- if .Values.httpRoute.enabled }}
+
+Application URL:
+  http://{{ .Values.httpRoute.hostname }}:{{ .Values.gateway.port }}/
+
+Homepage URL:
+  http://{{ .Values.httpRoute.hostname }}:{{ .Values.gateway.port }}{{ .Values.httpRoute.homepagePath }}
+{{- end }}

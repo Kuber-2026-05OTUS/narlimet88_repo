@@ -1,0 +1,13 @@
+{{- if .Values.config.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "homework.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "homework.labels" . | nindent 4 }}
+
+data:
+  file: |
+{{ .Values.config.fileContent | indent 4 }}
+{{- end }}

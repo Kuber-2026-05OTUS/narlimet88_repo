@@ -1,0 +1,84 @@
+replicaCount: 3
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: python
+  tag: "3.12-alpine"
+  pullPolicy: IfNotPresent
+
+initContainer:
+  name: init
+  image:
+    repository: busybox
+    tag: "1.36"
+    pullPolicy: IfNotPresent
+
+container:
+  name: web
+  port: 8000
+
+serviceAccount:
+  create: true
+  name: monitoring
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+gateway:
+  enabled: true
+  name: homework-gateway
+  className: traefik
+  port: 8000
+
+httpRoute:
+  enabled: true
+  hostname: homework.otus
+  homepagePath: /homepage
+  rewritePath: /index.html
+
+readinessProbe:
+  enabled: true
+  path: /index.html
+  initialDelaySeconds: 1
+  periodSeconds: 5
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+config:
+  enabled: true
+  mountPath: /homework/conf
+  fileContent: |
+    hello from configmap
+
+nodeSelector:
+  homework: "true"
+
+rollingUpdate:
+  maxUnavailable: 1
+  maxSurge: 1
+
+rbac:
+  monitoring:
+    enabled: true
+    metricsPath: /metrics
+
+
+
+redis:
+  enabled: true
+
+  architecture: standalone
+
+  auth:
+    enabled: false
+
+  master:
+    persistence:
+      enabled: false

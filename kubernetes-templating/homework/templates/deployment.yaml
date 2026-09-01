@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "homework.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "homework.labels" . | nindent 4 }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .Values.rollingUpdate.maxSurge }}
+
+  selector:
+    matchLabels:
+      {{- include "homework.selectorLabels" . | nindent 6 }}
+
+  template:
+    metadata:
+      labels:
+        {{- include "homework.selectorLabels" . | nindent 8 }}
+
+    spec:
+      serviceAccountName: {{ include "homework.serviceAccountName" . }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      initContainers:
+        - name: {{ .Values.initContainer.name }}
+          image: "{{ .Values.initContainer.image.repository }}:{{ .Values.initContainer.image.tag }}"
+          imagePullPolicy: {{ .Values.initContainer.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              echo '<html><body><h1>Hello from Kubernetes homework!</h1></body></html>' > /init/index.html
+          volumeMounts:
+            - name: shared-data
+              mountPath: /init
+
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          command:
+            - python
+            - -m
+            - http.server
+            - {{ .Values.container.port | quote }}
+            - --directory
+            - /homework
+
+          ports:
+            - name: http
+              containerPort: {{ .Values.container.port }}
+              protocol: TCP
+
+          volumeMounts:
+            - name: shared-data
+              mountPath: /homework
+
+            {{- if .Values.config.enabled }}
+            - name: config
+              mountPath: {{ .Values.config.mountPath }}
+            {{- end }}
+
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: {{ .Values.container.port }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          {{- end }}
+
+      volumes:
+        - name: shared-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "homework.fullname" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+
+        {{- if .Values.config.enabled }}
+        - name: config
+          configMap:
+            name: {{ include "homework.fullname" . }}
+        {{- end }}
