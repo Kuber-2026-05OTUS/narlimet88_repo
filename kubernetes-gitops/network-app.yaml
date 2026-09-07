@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-networks
+  namespace: argocd
+spec:
+  project: otus
+
+  source:
+    repoURL: https://github.com/Kuber-2026-05OTUS/narlimet88_repo.git
+    targetRevision: main
+    path: kubernetes-networks
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homework
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-templating
+  namespace: argocd
+spec:
+  project: otus
+
+  source:
+    repoURL: https://github.com/Kuber-2026-05OTUS/narlimet88_repo.git
+    targetRevision: main
+    path: kubernetes-templating/homework
+    helm:
+      parameters:
+        - name: replicaCount
+          value: "2"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homeworkhelm
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

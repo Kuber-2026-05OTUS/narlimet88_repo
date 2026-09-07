@@ -1,0 +1,35 @@
+global:
+  nodeSelector:
+    node-role: infra
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  service:
+    type: ClusterIP
+
+controller:
+  nodeSelector:
+    node-role: infra
+
+repoServer:
+  nodeSelector:
+    node-role: infra
+
+applicationSet:
+  nodeSelector:
+    node-role: infra
+
+notifications:
+  nodeSelector:
+    node-role: infra
+
+redis:
+  nodeSelector:
+    node-role: infra
+
+dex:
+  nodeSelector:
+    node-role: infra
