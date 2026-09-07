@@ -1,0 +1,19 @@
+config:
+  clients:
+    - url: http://loki-gateway.logging.svc.cluster.local/loki/api/v1/push
+
+  snippets:
+    pipelineStages:
+      - cri: {}
+
+daemonset:
+  enabled: true
+
+deployment:
+  enabled: false
+
+serviceMonitor:
+  enabled: false
+
+tolerations:
+  - operator: Exists
