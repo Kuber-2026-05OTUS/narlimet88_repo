@@ -1,0 +1,32 @@
+global:
+  enabled: true
+  name: consul
+
+server:
+  enabled: true
+  replicas: 3
+  bootstrapExpect: 3
+
+  affinity: null
+
+  storage: 1Gi
+  storageClass: standard
+  extraConfig: |
+    {
+      "server_rejoin_age_max": "2160h"
+    }
+
+client:
+  enabled: false
+
+connectInject:
+  enabled: false
+
+dns:
+  enabled: false
+
+ui:
+  enabled: false
+
+controller:
+  enabled: false
