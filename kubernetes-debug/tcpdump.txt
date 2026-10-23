@@ -1,0 +1,17 @@
+tcpdump: WARNING: any: That device doesn't support promiscuous mode
+(Promiscuous mode not supported on the "any" device)
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on any, link-type LINUX_SLL2 (Linux cooked v2), snapshot length 262144 bytes
+13:15:32.997480 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 80: 127.0.0.1.48056 > 127.0.0.1.80: Flags [S], seq 3188343198, win 65495, options [mss 65495,sackOK,TS val 2005402715 ecr 0,nop,wscale 10], length 0
+13:15:32.997492 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 80: 127.0.0.1.80 > 127.0.0.1.48056: Flags [S.], seq 3479772450, ack 3188343199, win 65483, options [mss 65495,sackOK,TS val 1131645200 ecr 2005402715,nop,wscale 10], length 0
+13:15:32.997502 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 72: 127.0.0.1.48056 > 127.0.0.1.80: Flags [.], ack 1, win 64, options [nop,nop,TS val 2005402715 ecr 1131645200], length 0
+13:15:32.997555 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 145: 127.0.0.1.48056 > 127.0.0.1.80: Flags [P.], seq 1:74, ack 1, win 64, options [nop,nop,TS val 2005402715 ecr 1131645200], length 73: HTTP: GET / HTTP/1.1
+13:15:32.997559 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 72: 127.0.0.1.80 > 127.0.0.1.48056: Flags [.], ack 74, win 64, options [nop,nop,TS val 1131645200 ecr 2005402715], length 0
+13:15:32.997725 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 310: 127.0.0.1.10 packets captured
+120 packets received by filter
+0 packets dropped by kernel
+80 > 127.0.0.1.48056: Flags [P.], seq 1:239, ack 74, win 64, options [nop,nop,TS val 1131645200 ecr 2005402715], length 238: HTTP: HTTP/1.1 200 OK
+13:15:32.997745 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 72: 127.0.0.1.48056 > 127.0.0.1.80: Flags [.], ack 239, win 64, options [nop,nop,TS val 2005402715 ecr 1131645200], length 0
+13:15:32.997784 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 684: 127.0.0.1.80 > 127.0.0.1.48056: Flags [P.], seq 239:851, ack 74, win 64, options [nop,nop,TS val 1131645200 ecr 2005402715], length 612: HTTP
+13:15:32.997795 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 72: 127.0.0.1.48056 > 127.0.0.1.80: Flags [.], ack 851, win 64, options [nop,nop,TS val 2005402715 ecr 1131645200], length 0
+13:15:32.997852 lo    In  ifindex 1 00:00:00:00:00:00 ethertype IPv4 (0x0800), length 72: 127.0.0.1.48056 > 127.0.0.1.80: Flags [F.], seq 74, ack 851, win 64, options [nop,nop,TS val 2005402715 ecr 1131645200], length 0

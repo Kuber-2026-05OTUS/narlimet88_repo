@@ -1,0 +1,4 @@
+strace: Process 1 attached
+13:20:36.227598 rt_sigsuspend([], 8strace: Process 1 detached
+ <detached ...>
+command terminated with exit code 143
