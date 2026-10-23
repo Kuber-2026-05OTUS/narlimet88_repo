@@ -1,0 +1,5 @@
+NAME          STATUS   ROLES           AGE     VERSION    INTERNAL-IP       EXTERNAL-IP   OS-IMAGE           KERNEL-VERSION     CONTAINER-RUNTIME
+k8s-cp1       Ready    control-plane   6m5s    v1.34.12   192.168.122.5     <none>        Ubuntu 26.04 LTS   7.0.0-38-generic   containerd://2.2.2
+k8s-worker1   Ready    <none>          2m58s   v1.34.12   192.168.122.223   <none>        Ubuntu 26.04 LTS   7.0.0-38-generic   containerd://2.2.2
+k8s-worker2   Ready    <none>          2m56s   v1.34.12   192.168.122.158   <none>        Ubuntu 26.04 LTS   7.0.0-38-generic   containerd://2.2.2
+k8s-worker3   Ready    <none>          2m53s   v1.34.12   192.168.122.69    <none>        Ubuntu 26.04 LTS   7.0.0-38-generic   containerd://2.2.2

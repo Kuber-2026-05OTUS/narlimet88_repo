@@ -1,0 +1,15 @@
+NAMESPACE      NAME                              READY   STATUS    RESTARTS   AGE     IP                NODE          NOMINATED NODE   READINESS GATES
+kube-flannel   kube-flannel-ds-9hnvx             1/1     Running   0          4m33s   192.168.122.5     k8s-cp1       <none>           <none>
+kube-flannel   kube-flannel-ds-9th5z             1/1     Running   0          2m56s   192.168.122.158   k8s-worker2   <none>           <none>
+kube-flannel   kube-flannel-ds-lkjql             1/1     Running   0          2m53s   192.168.122.69    k8s-worker3   <none>           <none>
+kube-flannel   kube-flannel-ds-w65mm             1/1     Running   0          2m58s   192.168.122.223   k8s-worker1   <none>           <none>
+kube-system    coredns-66bc5c9577-7shrg          1/1     Running   0          5m55s   10.244.0.3        k8s-cp1       <none>           <none>
+kube-system    coredns-66bc5c9577-r5snx          1/1     Running   0          5m55s   10.244.0.2        k8s-cp1       <none>           <none>
+kube-system    etcd-k8s-cp1                      1/1     Running   0          6m1s    192.168.122.5     k8s-cp1       <none>           <none>
+kube-system    kube-apiserver-k8s-cp1            1/1     Running   0          6m1s    192.168.122.5     k8s-cp1       <none>           <none>
+kube-system    kube-controller-manager-k8s-cp1   1/1     Running   0          6m1s    192.168.122.5     k8s-cp1       <none>           <none>
+kube-system    kube-proxy-62d45                  1/1     Running   0          2m58s   192.168.122.223   k8s-worker1   <none>           <none>
+kube-system    kube-proxy-bxh6p                  1/1     Running   0          2m56s   192.168.122.158   k8s-worker2   <none>           <none>
+kube-system    kube-proxy-lbt9n                  1/1     Running   0          5m56s   192.168.122.5     k8s-cp1       <none>           <none>
+kube-system    kube-proxy-xrbps                  1/1     Running   0          2m53s   192.168.122.69    k8s-worker3   <none>           <none>
+kube-system    kube-scheduler-k8s-cp1            1/1     Running   0          6m1s    192.168.122.5     k8s-cp1       <none>           <none>
