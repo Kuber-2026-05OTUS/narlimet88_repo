@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: online-boutique-dashboard
+  namespace: online-boutique
+  labels:
+    grafana_dashboard: "1"
+data:
+  online-boutique.json: |
+    {
+      "uid": "online-boutique",
+      "title": "Online Boutique",
+      "tags": ["diploma", "kubernetes", "online-boutique"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "30s",
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Frontend Available Replicas",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "kube_deployment_status_replicas_available{namespace=\"online-boutique\",deployment=\"frontend\"}",
+              "legendFormat": "Frontend",
+              "refId": "A"
+            }
+          ],
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "id": 2,
+          "title": "Running Pods",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum(kube_pod_status_phase{namespace=\"online-boutique\",phase=\"Running\"} == 1)",
+              "legendFormat": "Running",
+              "refId": "A"
+            }
+          ],
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 0
+          }
+        },
+        {
+          "id": 3,
+          "title": "Container Restarts (15m)",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"online-boutique\"}[15m]))",
+              "legendFormat": "Restarts",
+              "refId": "A"
+            }
+          ],
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 8
+          }
+        }
+      ]
+    }
