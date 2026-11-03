@@ -38,7 +38,7 @@
         repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ kubernetes_repo_version }}/deb/ /"
         filename: kubernetes
         state: present
-        update_cache: false
+        update_cache: true
 
     - name: Install containerd
       ansible.builtin.apt:
