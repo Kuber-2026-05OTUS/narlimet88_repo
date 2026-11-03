@@ -1,0 +1,26 @@
+grafana:
+  enabled: true
+  service:
+    type: ClusterIP
+  persistence:
+    enabled: false
+
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    storageSpec:
+      emptyDir: {}
+
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      emptyDir: {}
+
+kubeEtcd:
+  enabled: true
+
+kubeControllerManager:
+  enabled: true
+
+kubeScheduler:
+  enabled: true
