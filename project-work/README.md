@@ -286,3 +286,44 @@ Workflow: `.github/workflows/ci.yaml`.
 - Приложение доступно внутри лабораторной сети.
 - Полный Ansible-сценарий не проверен на чистых узлах.
 - GitHub Actions выполняет валидацию манифестов, но не сборку образов.
+
+## 15. Схема архитектуры платформы
+
+```mermaid
+flowchart TB
+    Developer["Разработчик"] --> GitHub["GitHub Repository"]
+
+    GitHub --> CI["GitHub Actions<br/>kubeconform"]
+    GitHub --> ArgoCD["Argo CD<br/>GitOps"]
+
+    subgraph K8S["Kubernetes Cluster — 4 узла"]
+        ArgoCD --> Boutique["Online Boutique<br/>12 Deployments"]
+        ArgoCD --> Nginx["Demo nginx<br/>2 replicas"]
+
+        Traefik["Traefik<br/>Gateway API"] --> Boutique
+        Traefik --> Nginx
+
+        Prometheus["Prometheus"] --> Grafana["Grafana"]
+        Alloy["Grafana Alloy<br/>DaemonSet"] --> Loki["Loki"]
+        Loki --> Grafana
+
+        Boutique -.-> Prometheus
+        Nginx -.-> Prometheus
+        Boutique -.-> Alloy
+        Nginx -.-> Alloy
+    end
+
+    User["Пользователь<br/>Локальная сеть"] --> Traefik
+
+    Ansible["Ansible<br/>Cluster Automation"] -.-> K8S
+```
+
+### Потоки данных
+
+1. Разработчик отправляет изменения в GitHub.
+2. GitHub Actions проверяет Kubernetes-манифесты через kubeconform.
+3. Argo CD синхронизирует приложения с Git-репозиторием.
+4. Traefik маршрутизирует HTTP-запросы к приложениям.
+5. Prometheus собирает метрики, Grafana отображает их.
+6. Grafana Alloy собирает логи контейнеров и отправляет их в Loki.
+7. Ansible содержит сценарии автоматизации развертывания Kubernetes.
