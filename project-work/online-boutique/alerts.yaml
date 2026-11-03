@@ -1,0 +1,35 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: online-boutique-alerts
+  namespace: online-boutique
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: online-boutique.rules
+      rules:
+        - alert: OnlineBoutiqueFrontendDown
+          expr: |
+            kube_deployment_status_replicas_available{
+              namespace="online-boutique",
+              deployment="frontend"
+            } == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Online Boutique frontend is unavailable"
+            description: "Frontend has no available replicas for more than 2 minutes."
+
+        - alert: OnlineBoutiquePodRestarts
+          expr: |
+            increase(kube_pod_container_status_restarts_total{
+              namespace="online-boutique"
+            }[15m]) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Online Boutique container restarted"
+            description: "Container {{ $labels.container }} in pod {{ $labels.pod }} restarted."
