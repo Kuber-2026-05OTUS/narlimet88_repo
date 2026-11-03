@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: diploma
+  namespace: argocd
+spec:
+  description: OTUS Diploma MVP Infrastructure Platform
+
+  sourceRepos:
+    - https://github.com/Kuber-2026-05OTUS/narlimet88_repo.git
+
+  destinations:
+    - namespace: diploma
+      server: https://kubernetes.default.svc
+
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

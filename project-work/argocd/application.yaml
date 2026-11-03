@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: diploma-app
+  namespace: argocd
+spec:
+  project: diploma
+
+  source:
+    repoURL: https://github.com/Kuber-2026-05OTUS/narlimet88_repo.git
+    targetRevision: main
+    path: project-work/application
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: diploma
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
