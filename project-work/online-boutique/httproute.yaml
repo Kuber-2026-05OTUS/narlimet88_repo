@@ -7,17 +7,13 @@ spec:
   parentRefs:
     - name: diploma-gateway
       namespace: diploma
+  hostnames:
+    - shop.local
   rules:
     - matches:
         - path:
             type: PathPrefix
-            value: /shop
-      filters:
-        - type: URLRewrite
-          urlRewrite:
-            path:
-              type: ReplacePrefixMatch
-              replacePrefixMatch: /
+            value: /
       backendRefs:
         - name: frontend
           port: 80
