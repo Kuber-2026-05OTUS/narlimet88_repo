@@ -1,0 +1,27 @@
+---
+- name: Check Kubernetes cluster nodes
+  hosts: k8s_cluster
+  gather_facts: true
+
+  tasks:
+    - name: Show operating system
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }}: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    - name: Check kubelet version
+      ansible.builtin.command: kubelet --version
+      register: kubelet_version
+      changed_when: false
+
+    - name: Show kubelet version
+      ansible.builtin.debug:
+        msg: "{{ kubelet_version.stdout }}"
+
+    - name: Check containerd version
+      ansible.builtin.command: containerd --version
+      register: containerd_version
+      changed_when: false
+
+    - name: Show containerd version
+      ansible.builtin.debug:
+        msg: "{{ containerd_version.stdout }}"

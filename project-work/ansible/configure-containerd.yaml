@@ -1,0 +1,21 @@
+---
+- name: Configure containerd for Kubernetes
+  hosts: k8s_cluster
+  become: true
+
+  tasks:
+    - name: Install containerd configuration
+      ansible.builtin.copy:
+        src: files/containerd-config.toml
+        dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: '0644'
+        backup: true
+      notify: Restart containerd
+
+  handlers:
+    - name: Restart containerd
+      ansible.builtin.systemd_service:
+        name: containerd
+        state: restarted
