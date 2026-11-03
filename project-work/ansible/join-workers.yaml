@@ -1,0 +1,30 @@
+---
+- name: Generate Kubernetes join command
+  hosts: control_plane
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Generate join command
+      ansible.builtin.command:
+        cmd: kubeadm token create --print-join-command
+      register: kubeadm_join_command
+      changed_when: false
+      no_log: true
+
+- name: Join Kubernetes worker nodes
+  hosts: workers
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Check if node is already joined
+      ansible.builtin.stat:
+        path: /etc/kubernetes/kubelet.conf
+      register: kubelet_conf
+
+    - name: Join worker to Kubernetes cluster
+      ansible.builtin.command:
+        cmd: "{{ hostvars[groups['control_plane'][0]].kubeadm_join_command.stdout }}"
+      when: not kubelet_conf.stat.exists
+      no_log: true

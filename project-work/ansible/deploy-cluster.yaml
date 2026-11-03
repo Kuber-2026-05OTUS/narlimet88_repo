@@ -1,0 +1,18 @@
+---
+- name: Prepare Kubernetes nodes
+  ansible.builtin.import_playbook: prepare-nodes.yaml
+
+- name: Install Kubernetes components
+  ansible.builtin.import_playbook: install-kubernetes.yaml
+
+- name: Configure containerd
+  ansible.builtin.import_playbook: configure-containerd.yaml
+
+- name: Initialize control plane
+  ansible.builtin.import_playbook: init-control-plane.yaml
+
+- name: Install Flannel CNI
+  ansible.builtin.import_playbook: install-flannel.yaml
+
+- name: Join worker nodes
+  ansible.builtin.import_playbook: join-workers.yaml
