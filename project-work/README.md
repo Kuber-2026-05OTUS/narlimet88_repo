@@ -197,3 +197,92 @@ Loki подключен к Grafana как источник данных.
 3. Мониторинг Kubernetes и приложения.
 4. Централизованный сбор логов.
 5. Просмотр метрик и логов через Grafana.
+
+## 10. Online Boutique
+
+В качестве основного приложения используется Google Online Boutique
+из проекта microservices-demo.
+
+Приложение развернуто в namespace `online-boutique` через Argo CD.
+
+Состав приложения:
+- 12 Kubernetes Deployment.
+- 12 Kubernetes Service.
+- 11 ServiceAccount.
+
+Манифесты расположены в `project-work/online-boutique/`.
+
+Argo CD Application: `online-boutique`.
+
+### Проверка
+
+    kubectl -n online-boutique get pods,deploy,svc
+    kubectl -n argocd get application online-boutique
+
+### HTTP-доступ
+
+Online Boutique доступен через Traefik и Gateway API.
+
+    curl -H 'Host: shop.local' http://192.168.122.223:30080/
+
+Ожидаемый результат: HTTP 200.
+
+Маршрутизация реализована через HTTPRoute с hostname `shop.local`.
+
+## 11. CI/CD
+
+Для CI используется GitHub Actions.
+
+Workflow: `.github/workflows/ci.yaml`.
+
+При изменениях в репозитории выполняется проверка Kubernetes-манифестов
+с помощью kubeconform.
+
+Для CD используется Argo CD:
+- Отслеживает ветку `main`.
+- Автоматически синхронизирует манифесты.
+- Использует selfHeal и prune.
+
+## 12. Мониторинг Online Boutique
+
+Для приложения созданы:
+- PrometheusRule с алертами.
+- Grafana Dashboard через ConfigMap.
+
+Файлы:
+- `project-work/online-boutique/alerts.yaml`
+- `project-work/online-boutique/dashboard.yaml`
+
+Алерты:
+- `OnlineBoutiqueFrontendDown`
+- `OnlineBoutiquePodRestarts`
+
+Панели Grafana:
+- Frontend Available Replicas.
+- Running Pods.
+- Container Restarts 15m.
+
+## 13. Автоматизация инфраструктуры
+
+Для автоматизации Kubernetes используется Ansible.
+
+Каталог: `project-work/ansible/`.
+
+Основные Playbook:
+- `prepare-nodes.yaml` — подготовка узлов.
+- `install-kubernetes.yaml` — установка Kubernetes.
+- `configure-containerd.yaml` — настройка containerd.
+- `init-control-plane.yaml` — инициализация Control Plane.
+- `install-flannel.yaml` — установка Flannel.
+- `join-workers.yaml` — подключение Worker Nodes.
+- `deploy-cluster.yaml` — общий сценарий развертывания.
+
+Проверены синтаксис и последовательность задач Ansible.
+Полное развертывание на чистых узлах пока не тестировалось.
+
+## 14. Дополнительные ограничения
+
+- Публичный HTTP-доступ из интернета не настроен.
+- Приложение доступно внутри лабораторной сети.
+- Полный Ansible-сценарий не проверен на чистых узлах.
+- GitHub Actions выполняет валидацию манифестов, но не сборку образов.

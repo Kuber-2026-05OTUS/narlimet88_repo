@@ -143,6 +143,27 @@ Argo CD автоматически создаст namespace diploma
 
 Ожидаемый статус приложения: Synced / Healthy.
 
+### Развертывание Online Boutique
+
+Основное приложение дипломного проекта — Google Online Boutique.
+
+Создаем отдельное Argo CD Application:
+
+    kubectl apply -f project-work/argocd/online-boutique.yaml
+
+Argo CD автоматически создаст namespace online-boutique
+и развернет микросервисы из project-work/online-boutique/.
+
+Проверка:
+
+    kubectl get application online-boutique -n argocd
+    kubectl get pods,deploy,svc -n online-boutique
+    kubectl get httproute -n online-boutique
+    kubectl get prometheusrule -n online-boutique
+
+Ожидаемый результат: 12 Deployment, все Pod Running,
+Argo CD Application Synced / Healthy.
+
 ## 11. Проверка HTTP-доступа
 
 В текущей лаборатории:
@@ -150,6 +171,15 @@ Argo CD автоматически создаст namespace diploma
     curl -I http://192.168.122.223:30080/
 
 Ожидаемый результат: HTTP 200.
+
+Проверка Online Boutique через Traefik:
+
+    curl -H 'Host: shop.local' http://192.168.122.223:30080/
+
+Ожидаемый результат: HTTP 200.
+
+Hostname shop.local задан в HTTPRoute приложения.
+Публичный доступ из интернета не настроен.
 
 При развертывании на других узлах необходимо использовать
 доступный IP-адрес узла Kubernetes.
@@ -219,3 +249,90 @@ Argo CD автоматически создаст namespace diploma
 - Loki работает с одной репликой.
 - Отказоустойчивое хранение не реализовано.
 - IP-адреса и NodePort соответствуют лабораторной среде.
+
+## 17. Автоматизация Kubernetes через Ansible
+
+Playbook расположены в каталоге `project-work/ansible/`.
+
+Проверка доступности узлов:
+
+    ansible k8s_cluster \
+      -i project-work/ansible/inventory.ini \
+      -m ping
+
+Проверка установленного Kubernetes:
+
+    ansible-playbook \
+      -i project-work/ansible/inventory.ini \
+      project-work/ansible/check-cluster.yaml
+
+Проверка синтаксиса общего Playbook:
+
+    ansible-playbook \
+      -i project-work/ansible/inventory.ini \
+      project-work/ansible/deploy-cluster.yaml \
+      --syntax-check
+
+Просмотр задач:
+
+    ansible-playbook \
+      -i project-work/ansible/inventory.ini \
+      project-work/ansible/deploy-cluster.yaml \
+      --list-tasks
+
+Для развертывания нового кластера предусмотрен Playbook
+`deploy-cluster.yaml`.
+
+Внимание: полный сценарий проверен только на синтаксис.
+Не запускайте его на действующем кластере без отдельной проверки.
+
+## 18. Проверка CI/CD
+
+CI реализован через GitHub Actions.
+
+Файл workflow:
+
+    .github/workflows/ci.yaml
+
+При запуске workflow выполняется проверка Kubernetes-манифестов
+с помощью kubeconform.
+
+Страница GitHub Actions:
+
+https://github.com/Kuber-2026-05OTUS/narlimet88_repo/actions
+
+CD реализован через Argo CD.
+
+Проверка состояния приложений:
+
+    kubectl get applications -n argocd
+
+Ожидаемый результат:
+
+- diploma-app: Synced / Healthy.
+- online-boutique: Synced / Healthy.
+
+## 19. Проверка мониторинга Online Boutique
+
+Проверка правил Prometheus:
+
+    kubectl get prometheusrule -n online-boutique
+
+Проверка Grafana Dashboard:
+
+    kubectl get configmap -n online-boutique \
+      -l grafana_dashboard=1
+
+В Grafana открыть Dashboard `Online Boutique`.
+
+Проверить графики:
+- Frontend Available Replicas.
+- Running Pods.
+- Container Restarts 15m.
+
+Логи Online Boutique доступны в Grafana Explore
+через источник данных Loki.
+
+LogQL:
+
+    {namespace="online-boutique"}
