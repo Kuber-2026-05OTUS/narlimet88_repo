@@ -1,0 +1,14 @@
+providers:
+  kubernetesGateway:
+    enabled: true
+
+gateway:
+  enabled: false
+
+service:
+  spec:
+    type: NodePort
+
+ports:
+  web:
+    nodePort: 30080
